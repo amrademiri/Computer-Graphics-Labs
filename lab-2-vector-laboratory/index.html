@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Lab 2 · Vector Laboratory | Computer Graphics Labs</title>
+<style>
+:root{color-scheme:dark;--bg:#070b18;--panel:#10172b;--soft:#1a2541;--text:#edf2ff;--muted:#9dabc7;--accent:#7bdbe5;--border:#2a3755}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text);background:radial-gradient(ellipse at 8% 3%,#202b54 0%,#090d1b 49%,#050815 100%);min-height:100vh}
+header{padding:22px max(24px,4vw) 16px;display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--border)}
+.brand{font-size:12px;font-weight:750;text-transform:uppercase;letter-spacing:.16em;color:var(--accent)}h1{font-size:clamp(23px,3.2vw,35px);margin:8px 0 5px;letter-spacing:-.035em}header p{font-size:13px;color:var(--muted);margin:0}a{color:#a6e7ff;text-decoration:none}a:hover{text-decoration:underline}
+.container{display:grid;grid-template-columns:minmax(0,1fr) 328px;gap:18px;padding:18px max(24px,4vw) 30px;min-height:calc(100vh - 110px)}
+.stage{min-height:540px;height:min(75vh,820px);position:relative;overflow:hidden;border:1px solid var(--border);border-radius:20px;background:radial-gradient(ellipse at 50% 40%,#182543,#090e1d 72%)}
+.stage canvas{width:100%;height:100%;display:block}.overlay{position:absolute;pointer-events:none;left:18px;bottom:15px;color:#b7c7e3;font-size:12px;line-height:1.6;max-width:90%;background:#0b1324cc;padding:10px 13px;border:1px solid #314060;border-radius:12px}
+.panel{background:#10172be8;border:1px solid var(--border);border-radius:20px;padding:20px;align-self:start;box-shadow:0 15px 45px #02061466;max-height:calc(100vh - 152px);overflow:auto}
+h2{font-size:16px;letter-spacing:-.015em;margin:0 0 15px}h3{font-size:13px;margin:20px 0 10px;color:#c9d6f2}.desc,.small{font-size:12px;color:var(--muted);line-height:1.55}.desc{margin:-4px 0 20px}
+.control{margin:17px 0}.control label{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:#cfdaed;margin:0 0 8px}.value{color:#8ee7fa;font-variant-numeric:tabular-nums}input[type=range]{width:100%;accent-color:#72d8e5;cursor:pointer}input[type=checkbox]{accent-color:#7bdbe5}select,button,input[type=number]{background:#1a2541;color:var(--text);border:1px solid #3a4968;border-radius:10px;padding:10px 12px;font:inherit;font-size:12px;outline:0}select{width:100%;cursor:pointer}button{cursor:pointer;font-weight:650}button:hover{background:#29365b}button.primary{background:#246e85;border-color:#469ab6}button.primary:hover{background:#31879f}.buttons{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}.checkline{display:flex;align-items:center;gap:9px;font-size:12px;color:#cfd9ed;margin:12px 0;cursor:pointer}
+.readout{background:#0a1122;border:1px solid #2b3b5b;border-radius:12px;padding:12px 13px;color:#b8cee8;font:11px/1.65 ui-monospace,SFMono-Regular,monospace;white-space:pre-wrap;overflow-wrap:anywhere}
+.vector-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.vector-grid label{display:grid;font-size:11px;color:#aabbd3;gap:5px}.vector-grid input{width:100%;padding:8px 5px;font-size:12px}details{padding:12px 0;border-top:1px solid var(--border)}summary{cursor:pointer;font-size:13px;font-weight:750;color:#cce6f7;list-style:none}summary::before{content:'▸ ';color:var(--accent)}details[open] summary::before{content:'▾ '}details p{font-size:12px;line-height:1.55;color:var(--muted);margin-bottom:0}
+.pill{font-size:11px;border:1px solid #37617a;background:#143749;color:#a9e7f5;padding:6px 10px;border-radius:999px;white-space:nowrap}footer{text-align:center;color:#7384a6;font-size:11px;padding:0 15px 20px}
+@media (max-width:850px){header{padding:18px 20px}.container{grid-template-columns:1fr;padding:14px 16px}.stage{min-height:380px;height:52vh}.panel{max-height:none}header .pill{display:none}}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.187.0/examples/jsm/"}}</script>
+</head><body>
+<header><div><div class="brand">Computer Graphics / Interactive Labs</div><h1>Lab 2 · Vector Laboratory</h1><p>Vector operations, geometric visualization and mandatory ray–plane intersection.</p></div><a class="pill" href="../index.html">← All five labs</a></header>
+<main class="container"><div class="stage" id="stage"><div class="overlay">Colored arrows: A = cyan · B = purple · A+B = green · A×B = orange. Ray = yellow; hit = pink.</div></div>
+<aside class="panel">
+<h2>Minimum · Vector3 basics</h2><p class="desc">Edit A and B. The 3D arrows and computed vector operations update immediately.</p>
+<h3>Vector A</h3><div class="vector-grid" id="vecA">
+<label>X<input type="number" min="-6" max="6" step="0.5" value="3" data-axis="x"></label><label>Y<input type="number" min="-6" max="6" step="0.5" value="2" data-axis="y"></label><label>Z<input type="number" min="-6" max="6" step="0.5" value="1" data-axis="z"></label></div>
+<h3>Vector B</h3><div class="vector-grid" id="vecB">
+<label>X<input type="number" min="-6" max="6" step="0.5" value="-1" data-axis="x"></label><label>Y<input type="number" min="-6" max="6" step="0.5" value="3" data-axis="y"></label><label>Z<input type="number" min="-6" max="6" step="0.5" value="2" data-axis="z"></label></div>
+<h3>Standard · Operations</h3><div class="readout" id="vectorsOutput">Calculating…</div>
+<label class="checkline"><input type="checkbox" id="showCross" checked> Show A × B (orange arrow)</label>
+<label class="checkline"><input type="checkbox" id="showSum" checked> Show A + B (green arrow)</label>
+<h3>Challenge · Ray–Plane Intersection</h3><p class="small">Ray R(t) = O + tD, t ≥ 0; plane y = h. A hit exists only if Dᵧ ≠ 0 and t ≥ 0.</p>
+<div class="control"><label>Plane height y = <span class="value" id="planeValue">0.0</span></label><input id="planeHeight" type="range" min="-2" max="4" step="0.25" value="0"></div>
+<h3>Ray origin O</h3><div class="vector-grid" id="rayOrigin"><label>X<input type="number" step="0.5" value="-3" data-axis="x"></label><label>Y<input type="number" step="0.5" value="4" data-axis="y"></label><label>Z<input type="number" step="0.5" value="-2" data-axis="z"></label></div>
+<h3>Ray direction D</h3><div class="vector-grid" id="rayDirection"><label>X<input type="number" step="0.5" value="1" data-axis="x"></label><label>Y<input type="number" step="0.5" value="-2" data-axis="y"></label><label>Z<input type="number" step="0.5" value="1" data-axis="z"></label></div>
+<div class="readout" id="intersectionOutput">Calculating…</div>
+<div class="buttons"><button id="reset">Reset examples</button></div>
+<details><summary>Level coverage note</summary><p>Minimum / Standard / Challenge are educational groupings here, not a verified copy of your professor's exact Lab 2 assignment sheet. Compare with the handout before submitting.</p></details>
+</aside></main>
+<footer>Three.js 0.187.0 • Computer Graphics coursework • Drag the viewport to orbit the camera</footer>
+<script type="module" src="./main.js"></script></body></html>
