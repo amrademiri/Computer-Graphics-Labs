@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Lab 4 · Robotic Hand | Computer Graphics Labs</title>
+<style>
+:root{color-scheme:dark;--bg:#070b18;--panel:#10172b;--soft:#1a2541;--text:#edf2ff;--muted:#9dabc7;--accent:#7bdbe5;--border:#2a3755}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text);background:radial-gradient(ellipse at 8% 3%,#202b54 0%,#090d1b 49%,#050815 100%);min-height:100vh}
+header{padding:22px max(24px,4vw) 16px;display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--border)}
+.brand{font-size:12px;font-weight:750;text-transform:uppercase;letter-spacing:.16em;color:var(--accent)}h1{font-size:clamp(23px,3.2vw,35px);margin:8px 0 5px;letter-spacing:-.035em}header p{font-size:13px;color:var(--muted);margin:0}a{color:#a6e7ff;text-decoration:none}a:hover{text-decoration:underline}
+.container{display:grid;grid-template-columns:minmax(0,1fr) 328px;gap:18px;padding:18px max(24px,4vw) 30px;min-height:calc(100vh - 110px)}
+.stage{min-height:540px;height:min(75vh,820px);position:relative;overflow:hidden;border:1px solid var(--border);border-radius:20px;background:radial-gradient(ellipse at 50% 40%,#182543,#090e1d 72%)}
+.stage canvas{width:100%;height:100%;display:block}.overlay{position:absolute;pointer-events:none;left:18px;bottom:15px;color:#b7c7e3;font-size:12px;line-height:1.6;max-width:90%;background:#0b1324cc;padding:10px 13px;border:1px solid #314060;border-radius:12px}
+.panel{background:#10172be8;border:1px solid var(--border);border-radius:20px;padding:20px;align-self:start;box-shadow:0 15px 45px #02061466;max-height:calc(100vh - 152px);overflow:auto}
+h2{font-size:16px;letter-spacing:-.015em;margin:0 0 15px}h3{font-size:13px;margin:20px 0 10px;color:#c9d6f2}.desc,.small{font-size:12px;color:var(--muted);line-height:1.55}.desc{margin:-4px 0 20px}
+.control{margin:17px 0}.control label{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:#cfdaed;margin:0 0 8px}.value{color:#8ee7fa;font-variant-numeric:tabular-nums}input[type=range]{width:100%;accent-color:#72d8e5;cursor:pointer}input[type=checkbox]{accent-color:#7bdbe5}select,button,input[type=number]{background:#1a2541;color:var(--text);border:1px solid #3a4968;border-radius:10px;padding:10px 12px;font:inherit;font-size:12px;outline:0}select{width:100%;cursor:pointer}button{cursor:pointer;font-weight:650}button:hover{background:#29365b}button.primary{background:#246e85;border-color:#469ab6}button.primary:hover{background:#31879f}.buttons{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}.checkline{display:flex;align-items:center;gap:9px;font-size:12px;color:#cfd9ed;margin:12px 0;cursor:pointer}
+.readout{background:#0a1122;border:1px solid #2b3b5b;border-radius:12px;padding:12px 13px;color:#b8cee8;font:11px/1.65 ui-monospace,SFMono-Regular,monospace;white-space:pre-wrap;overflow-wrap:anywhere}
+.vector-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.vector-grid label{display:grid;font-size:11px;color:#aabbd3;gap:5px}.vector-grid input{width:100%;padding:8px 5px;font-size:12px}details{padding:12px 0;border-top:1px solid var(--border)}summary{cursor:pointer;font-size:13px;font-weight:750;color:#cce6f7;list-style:none}summary::before{content:'▸ ';color:var(--accent)}details[open] summary::before{content:'▾ '}details p{font-size:12px;line-height:1.55;color:var(--muted);margin-bottom:0}
+.pill{font-size:11px;border:1px solid #37617a;background:#143749;color:#a9e7f5;padding:6px 10px;border-radius:999px;white-space:nowrap}footer{text-align:center;color:#7384a6;font-size:11px;padding:0 15px 20px}
+@media (max-width:850px){header{padding:18px 20px}.container{grid-template-columns:1fr;padding:14px 16px}.stage{min-height:380px;height:52vh}.panel{max-height:none}header .pill{display:none}}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.187.0/examples/jsm/"}}</script>
+</head><body>
+<header><div><div class="brand">Computer Graphics / Interactive Labs</div><h1>Lab 4 · Robotic Hand</h1><p>Hierarchical palm, five digits, realistic left-side thumb and joint animation.</p></div><a class="pill" href="../index.html">← All five labs</a></header>
+<main class="container"><div class="stage" id="stage"><div class="overlay">Adjust curl, thumb and spread. Drag the view to inspect articulated finger joints.</div></div>
+<aside class="panel">
+<h2>Hand controls</h2><p class="desc">Each finger has three connected segments. Its local joints bend relative to the previous segment, demonstrating hierarchical transforms.</p>
+<div class="control"><label for="curl">Finger curl <span class="value" id="curlValue">20%</span></label><input id="curl" type="range" min="0" max="100" value="20"></div>
+<div class="control"><label for="thumb">Thumb curl <span class="value" id="thumbValue">15%</span></label><input id="thumb" type="range" min="0" max="100" value="15"></div>
+<div class="control"><label for="spread">Finger spread <span class="value" id="spreadValue">16°</span></label><input id="spread" type="range" min="0" max="32" value="16"></div>
+<label class="checkline"><input id="wave" type="checkbox"> Animate hand gesture</label>
+<div class="buttons"><button id="open" class="primary">Open hand</button><button id="fist">Make a fist</button></div>
+<h3>Geometry hierarchy</h3><div class="readout">Hand root
+├─ Wrist
+├─ Palm
+├─ Thumb → 2 segments
+├─ Index → 3 segments
+├─ Middle → 3 segments
+├─ Ring → 3 segments
+└─ Pinky → 3 segments</div>
+<details><summary>Orientation</summary><p>Camera faces the palm; the thumb is explicitly constructed on the LEFT side. Drag to inspect the joint structure from multiple angles.</p></details>
+</aside></main>
+<footer>Three.js 0.187.0 • Computer Graphics coursework • Drag the viewport to orbit the camera</footer>
+<script type="module" src="./main.js"></script></body></html>
