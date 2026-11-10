@@ -1,34 +1,22 @@
-# Computer Graphics — Labs 1–5
+# Computer Graphics Labs
 
-Five interactive, standalone Three.js browser labs, each in its own folder.
+**Student:** Amra Demiri  
+**Course:** Computer Graphics  
+**Academic Year:** 2026/2027
 
-## How to run
+This repository contains 6 Computer Graphics labs created using JavaScript and Three.js.
 
-1. Download and unzip the project. Open the unzipped folder in Visual Studio Code.
-2. Start a simple local development server **at the root of the project**:
+## Labs
 
-   ```bash
-   python3 -m http.server 8000
-   ```
+1. **Lab 1 – Rotating Cube:** A rotating 3D cube.
+2. **Lab 2 – Vector Laboratory:** Vector operations and ray-plane intersection.
+3. **Lab 3 – Solar System:** Sun, Earth, Moon, Mars and Phobos.
+4. **Lab 4 – Robotic Hand:** A 3D hand with movable fingers.
+5. **Lab 5 – BufferGeometry:** Creating 3D shapes using vertices and faces.
+6. **Lab 6 – 3D Model:** Loading a PLY 3D model and working with different cameras.
 
-3. Open http://localhost:8000/ and click a lab. Alternatively, use VS Code **Live Server**.
-4. An internet connection is needed for the Three.js CDN library.
+## How to Run
 
-> Opening an `index.html` file directly using `file://` may block ES modules in some browsers, so use a local server.
+Open the project in Visual Studio Code and use Live Server to run the HTML files.
 
-## Required labs
-
-| Folder | Implementation |
-|---|---|
-| `lab-1-rotating-cube` | Animated 3D cube with speed sliders, pause, reset, camera controls |
-| `lab-2-vector-laboratory` | Vector3 math (add, subtract, dot, cross, normalize, lengths, angle, projection), vectors as arrows, mandatory ray–plane intersection |
-| `lab-3-solar-system` | Sun, Earth–Moon hierarchical orbit and Mars–Phobos hierarchical orbit, adjustable speed |
-| `lab-4-robotic-hand` | Palm, wrist, all four fingers, thumb on left side of palm, articulated joints |
-| `lab-5-buffergeometry-shapes` | Procedural indexed triangle mesh forming a crystal or open-top vase; vertex count, faces, normals and wireframe |
-
-
-
-## Tech stack
-
-HTML, CSS, JavaScript, Three.js `0.187.0`, OrbitControls, WebGLRenderer. Source code stays editable in each lab's `main.js`.
-
+Each lab is stored in its own folder.
